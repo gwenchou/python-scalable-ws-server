@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+    redis:
+        container_name: python-websocket-server-redis
+        image: redis
+    websocket-server:
+        environment:
+            - WEBSOCKET_SERVE_PORT=8000
+            - REDIS_URL=redis://python-websocket-server-redis?encoding=utf-8
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: websocket-server
+
+        working_dir: /code
+
+        volumes:
+            - ./app:/code
+
+        ports:
+            - 8000
+
+        command: python3 main.py
+        depends_on:
+            - redis
